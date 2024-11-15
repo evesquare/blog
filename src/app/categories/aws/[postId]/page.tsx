@@ -1,6 +1,7 @@
 import fs, { readFile } from "fs/promises";
 import path from "path";
 import { compileMDX, CompileMDXResult } from "next-mdx-remote/rsc";
+import { components } from "@/app/components/mdx";
 
 export async function generateStaticParams() {
   const posts = ["post1", "post2"];
@@ -19,6 +20,8 @@ async function loadMDX(
   // front-matterもパースする場合、ここで指定する
   return compileMDX({
     source: data,
+    components: components,
+    options: { parseFrontmatter: true },
   });
 }
 
