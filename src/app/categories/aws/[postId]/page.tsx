@@ -5,7 +5,6 @@ import { components } from "@/components/mdx";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import rehypeSlug from "rehype-slug";
-import rehypePrism from "rehype-prism";
 import rehypePrettyCode from "rehype-pretty-code";
 
 export async function generateStaticParams() {
@@ -43,9 +42,14 @@ async function loadMDX(
         rehypePlugins: [
           rehypeSlug,
           [
-            rehypePrettyCode,
+            rehypePrettyCode, // コードブロックのシンタックスハイライト
             {
               theme: "github-dark-default",
+              // theme: {
+              //   dark: "github-dark-default",
+              //   light: "github-light",
+              // }
+              // これでできるはずなんだけどできない。
             },
           ],
         ],
