@@ -1,3 +1,5 @@
+import { Hello } from "@/components/hello";
+
 function slugify(header: string) {
   return encodeURI(
     header
@@ -11,12 +13,13 @@ function slugify(header: string) {
   ).replace(/\-+$/, "");
 }
 
-export const getAnchor = (value: any) => {
+export const getAnchor = (value: string) => {
   const isString = typeof value === "string";
   return isString ? slugify(value) : "";
 };
 
 export const components = {
+  Hello: Hello,
   h2: ({ children, ...rest }: any) => {
     const id = getAnchor(children);
 
@@ -110,25 +113,6 @@ export const components = {
       >
         {children}
       </ul>
-    );
-  },
-  code: ({ children, ...rest }: any) => {
-    return (
-      <span
-        className="-my-0.5 inline-block rounded bg-gray-900 px-1.5 py-px font-mono text-[13px] text-white/80 sm:text-base group-[.blockquote]:sm:text-sm"
-        {...rest}
-      >
-        {children}
-      </span>
-    );
-  },
-  pre: ({ children, ...rest }: any) => {
-    return (
-      <code
-        code={children.props.children}
-        className="code !mb-16 max-w-full overflow-clip overflow-x-scroll rounded-xl bg-gray-900 p-4 font-mono text-sm sm:-mx-3 sm:max-w-[calc(100%+1rem)] sm:p-6 sm:text-base [&>*]:!bg-gray-900"
-        {...rest}
-      />
     );
   },
   blockquote: ({ children, ...rest }: any) => {

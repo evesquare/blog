@@ -1,7 +1,12 @@
 import fs, { readFile } from "fs/promises";
 import path from "path";
 import { compileMDX, CompileMDXResult } from "next-mdx-remote/rsc";
-import { components } from "@/app/components/mdx";
+import { components } from "@/components/mdx";
+import remarkGfm from "remark-gfm";
+import remarkToc from "remark-toc";
+import rehypeSlug from "rehype-slug";
+import rehypePrism from "rehype-prism";
+import rehypePrettyCode from "rehype-pretty-code";
 
 export async function generateStaticParams() {
   const posts = ["post1", "post2"];
@@ -21,7 +26,31 @@ async function loadMDX(
   return compileMDX({
     source: data,
     components: components,
-    options: { parseFrontmatter: true },
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [
+          remarkGfm,
+          [
+            remarkToc,
+            {
+              heading: "目次", // 「### 目次」であることかつ、目次のHeadingが他に存在していないとき表示される
+              maxDepth: 3,
+              tight: true, // `true` にすると `li` 要素内に `p` 要素を作らないようになる
+            },
+          ],
+        ],
+        rehypePlugins: [
+          rehypeSlug,
+          [
+            rehypePrettyCode,
+            {
+              theme: "github-dark-default",
+            },
+          ],
+        ],
+      },
+    },
   });
 }
 
@@ -30,8 +59,6 @@ export default async function Post(props: {
 }) {
   const { postId } = await props.params;
   const mdx = await loadMDX(postId);
-  console.log(mdx.content);
-  console.log("gofe");
 
   return (
     <div>
