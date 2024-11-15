@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Content, { meta } from "@/contents/aws/post1.mdx";
 
 export default function Home() {
