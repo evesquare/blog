@@ -1,6 +1,6 @@
 import fs, { readFile } from "fs/promises";
 import path from "path";
-import { compileMDX } from "next-mdx-remote/rsc";
+import { compileMDX, CompileMDXResult } from "next-mdx-remote/rsc";
 
 export async function generateStaticParams() {
   const posts = ["post1", "post2"];
@@ -9,7 +9,9 @@ export async function generateStaticParams() {
   });
 }
 
-async function loadMDX(postId: string) {
+async function loadMDX(
+  postId: string
+): Promise<CompileMDXResult<Record<string, unknown>>> {
   const root = path.resolve();
   const mdxpath = path.join(root, "src/contents/aws", `${postId}.mdx`);
   const data = await readFile(mdxpath, { encoding: "utf-8" });
@@ -20,8 +22,10 @@ async function loadMDX(postId: string) {
   });
 }
 
-export default async function Post({ params }: { params: { postId: string } }) {
-  const { postId } = await params;
+export default async function Post(props: {
+  params: Promise<{ postId: string }>;
+}) {
+  const { postId } = await props.params;
   const mdx = await loadMDX(postId);
   console.log(mdx.content);
   console.log("gofe");
